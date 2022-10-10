@@ -1,0 +1,83 @@
+/*!
+Author:     Wady
+Author URI: https://wady.sa
+*/
+
+/* General */
+html {
+    direction: ltr;
+}
+
+[type=email], [type=number], [type=tel], [type=url] {
+    text-align: left;
+}
+
+.btn-submit {
+    float: right;
+}
+
+header .login span {
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+header .user-icon a i {
+    margin-right: 0;
+    margin-left: 10px;
+    border-right: none;
+    border-left: 2px solid #cdcaca;
+}
+
+footer #widgets .menu a::before {
+    content: "\f101";
+    margin-left: 0;
+    margin-right: 10px;
+    float: left;
+}
+
+footer #widgets .contact i {
+    margin-left: 0;
+    margin-right: 15px;
+}
+
+.owl-carousel .owl-nav button.owl-next {
+    float: right;
+    margin-right: -20px;
+}
+
+.owl-carousel .owl-nav button.owl-prev {
+    float: left;
+    margin-left: -20px;
+}
+
+ul.pagination li a {
+    float: left;
+}
+
+.e3lan-title .badge i {
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+#messages img {
+    margin-left: 0;
+	margin-right: 20px;
+}
+
+#rating img {
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 62em) {
+    .carousel-p .owl-nav button.owl-next, .carousel-p .owl-nav button.owl-prev {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 0;
+    }
+	
+	#messages img {
+        margin: 20px 20px 20px 0;
+    }
+}
