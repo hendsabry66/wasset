@@ -109,7 +109,7 @@
                     <div class="card">
                         <div class="overlay">
                             <h6 class="card-title fw-bold">يمكنك مشاهدة تفاصيل الإعلان كلها من هنا</h6>
-                            <a href="{{url('ads/'.$ad->id)}}" class="btn btn-card">التفاصيل</a>
+                            <a href="{{url('adDetails/'.$ad->id)}}" class="btn btn-card">التفاصيل</a>
                         </div>
                         <img src="{{$ad->image}}" class="card-img-top" alt="...">
                         <div class="card-body text-center">
