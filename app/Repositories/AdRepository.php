@@ -122,4 +122,5 @@ class AdRepository extends BaseRepository
         $img =  $img->save($imgPath.$imgName);
         return $imgName;
     }
+
 }

@@ -21,27 +21,28 @@ class UserController extends AppBaseController{
 
 
 
-    public function profile()
+    public function myProfile()
     {
         $user = auth()->user();
-        return view('web.profile', compact('user'));
+        return view('web.user.profile', compact('user'));
     }
 
-    public function edit_user($user_id)
+    public function editProfile()
     {
-        $user = $this->userRepository->find($user_id);
-        return view('web.edit_user', compact('user'));
+        $user = auth()->user();
+        return view('web.user.editProfile', compact('user'));
     }
 
-    public function update_user(Request  $request, $user_id)
+
+    public function postEditProfile(Request  $request)
     {
         $validate =$request->validate(
             [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,'.$user_id,
+                'email' => 'required|string|email|max:255|unique:users,email,'.auth()->user()->id,
             ]
         );
-        $user = $this->userRepository->find($user_id);
+        $user = auth()->user();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
@@ -50,8 +51,9 @@ class UserController extends AppBaseController{
         }
 
         $user->save();
-        Flash::success('User updated successfully.');
-        return redirect('/profile');
+
+        return redirect('editProfile')->with('success', __('web.updated_successfully'));
+
     }
 
     public function logout()
@@ -64,7 +66,7 @@ class UserController extends AppBaseController{
     {
         $user = $this->userRepository->find($id);
         $ads = $this->adRepository->getAdsByUser($id);
-        return view('web.user_profile', compact('user','ads'));
+        return view('web.user.user_profile', compact('user','ads'));
     }
 
     public function rateUser(Request $request)

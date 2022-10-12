@@ -22,6 +22,9 @@
 <script src="{{asset('web/assets/js/owl.carousel.min.js')}}"></script>
 <script src="{{asset('web/assets/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('web/assets/js/custom.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.34/sweetalert2.min.js"></script>
+@yield('js')
 
 </body>
 </html>

@@ -97,7 +97,7 @@ class AdController extends AppBaseController
             }
         }
 
-        return redirect(url('ad/create'))->with('success','Ad Created Successfully');
+        return redirect(url('adDetails/'.$ad->id))->with('success',__('messages.added_successfully'));
     }
 
 

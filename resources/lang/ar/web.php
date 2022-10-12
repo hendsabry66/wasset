@@ -3,7 +3,8 @@ return [
     'profile' => 'حسابي',
     'favourites' => 'المفضلة',
     'messages' => 'محادثاتي',
-    'Log in or join us'=>'سجل الدخول أو انضم إلينا',
+    'Log in'=>'سجل الدخول',
+    'or join us'=>' أو انضم إلينا',
     'add your ad'=>'أضف إعلانك',
     'home'=>'الرئيسية',
     'contact us'=>'اتصل بنا',
@@ -35,7 +36,17 @@ return [
     'adImage'=>'الصورة الرئيسية للاعلان',
     'adAdditionalImages'=>'صورة اضافية للاعلان',
     'send'=>'ارسال',
-
+    'added_successfully'=>'تمت الاضافة بنجاح',
+    'subject'=>'الموضوع',
+    'message'=>'الرسالة',
+    'editProfile'=>'تعديل الحساب',
+    'updated_successfully'=>'تم التعديل بنجاح',
+    'myAds'=>'إعلاناتي',
+    'more'=>'المزيد',
+    'add_to_favourites'=>'أضف إلى المفضلة',
+    'messageSentSuccessfully'=>'تم ارسال الرسالة بنجاح',
+    'You_can_not_send_message_to_yourself'=>'لا يمكنك ارسال رسالة لنفسك',
+    'conversationDeletedSuccessfully'=>'تم حذف المحادثة بنجاح',
 
 
 ];

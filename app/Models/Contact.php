@@ -19,14 +19,18 @@ class Contact extends Model
     use HasFactory;
 
     public $table = 'contacts';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
 
     public $fillable = [
-        
+        'name',
+        'email',
+        'subject',
+        'details',
+
     ];
 
     /**
@@ -35,7 +39,7 @@ class Contact extends Model
      * @var array
      */
     protected $casts = [
-        
+
     ];
 
     /**
@@ -44,8 +48,8 @@ class Contact extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

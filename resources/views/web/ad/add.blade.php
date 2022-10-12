@@ -4,7 +4,7 @@
 <main class="pt-4 pb-4">
 
     @if($errors->any())
-        <div class="alert alert-danger">
+        <div class="alert alert-danger text-center">
             <ul>
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -14,7 +14,7 @@
     @endif
 
     @if(session()->has('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success text-center">
             {{ session()->get('success') }}
         </div>
     @endif
@@ -23,7 +23,7 @@
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-7">
-                    <form method="post" action="{{url('ad/store')}}" enctype="multipart/form-data">
+                    <form method="post" action="{{LaravelLocalization::localizeUrl('ad/store')}}" enctype="multipart/form-data">
                         @csrf
                         <h2 class="title-form">@lang('web.addAd')</h2>
 
@@ -64,7 +64,7 @@
                         <input class="form-control" type="file" id="6" name="image">
 
                         <label for="7" class="form-label fw-bold pt-4">@lang('web.adAdditionalImages')</label>
-                        <input class="form-control" type="file" id="7" name="images[]">
+                        <input class="form-control" type="file" id="7" name="images[]" multiple>
 
                         <button type="submit" class="btn btn-submit hvr-sweep-to-left">@lang('web.send')</button>
                     </form>

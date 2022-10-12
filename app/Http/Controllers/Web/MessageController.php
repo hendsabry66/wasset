@@ -4,54 +4,107 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Conversation;
+use App\Models\Message;
+use App\Models\User;
 
 class MessageController extends Controller
 {
+    //get message form
+    public function getSendMessage($user_id){
+        $user = User::find($user_id);
+        return view('web.messages.sendMessage',compact('user'));
+    }
+
+    //save message
+    public function sendMessage(Request $request){
+        $request->validate([
+              'message' => 'required',
+        ]);
+
+        if ($request->reciver_id == auth()->user()->id)
+        {
+            return  redirect()->back()->with('error', __('web.You_can_not_send_message_to_yourself'));
+        }
+
+
+        $conversation = Conversation::whereIn('sender_id', [auth()->user()->id, $request->reciver_id])
+            ->whereIn('reciver_id', [$request->reciver_id, auth()->user()->id])
+            ->first(); // Get conversation data
+
+        if (!$conversation) {
+            $conversation = Conversation::firstOrcreate([
+                'sender_id' => auth()->user()->id,
+                'reciver_id' => $request->reciver_id,
+            ]);
+
+        }
+
+        $message = Message::create([
+            'message' => $request->message,
+            'user_id' => auth()->user()->id,
+            'conversation_id' => $conversation->id,
+        ]);
+        return redirect()->back()->with('success', __('web.messageSentSuccessfully'));
+
+    }
+
+    //get user in conversation
+    private function reciverUser($id){
+        return User::where('id',$id)->select('id','name')->first();
+    }
+
+    //get all conversations
     public function conversations(Request $request){
-        $conversions = Conversation::with('latest_message')
+         $conversations = Conversation::with('latest_message')
             ->join('messages', 'conversations.id', '=', 'messages.conversation_id')
             ->where('sender_id',auth()->user()->id)
             ->orWhere('reciver_id',auth()->user()->id)
-            //->selectRaw("conversations.id,conversations.reciver_id,conversations.sender_id, (SELECT MAX(created_at) from messages WHERE messages.conversation_id=conversations.id) as latest_message_on")
-            //
             ->select('conversations.id','conversations.reciver_id','conversations.sender_id')
             ->groupBy('conversations.id')
             ->orderBy('messages.created_at', 'desc')
-            ->limit($request->limit)
-            ->offset($request->offset)
             ->get();
 
-        foreach($conversions as $conversion){
+        foreach($conversations as $conversation){
 
-            if($conversion->sender_id != auth()->user()->id){
-                $conversion->user = $this->reciverUser($conversion->sender_id);
+            if($conversation->sender_id != auth()->user()->id){
+                $conversation->user = $this->reciverUser($conversation->sender_id);
 
-            }elseif($conversion->reciver_id != auth()->user()->id){
-                $conversion->user = $this->reciverUser($conversion->reciver_id);
+            }elseif($conversation->reciver_id != auth()->user()->id){
+                $conversation->user = $this->reciverUser($conversation->reciver_id);
             }
         }
 
-        return $this->data(200,$conversions);
+
+        return view('web.messages.conversations',compact('conversations'));
 
     }
-    private function reciverUser($id){
-        return User::where('id',$id)->select('id','username','image')->first();
-    }
-
+    //get conversation messages
     public function conversation($conversion_id,Request $request){
-        $conv = Conversation::find($conversion_id);
-        $conversion =$conv->messages()
+        $conversation = Conversation::find($conversion_id);
+        $messages =$conversation->messages()
             ->orderBy('created_at','desc')
-            ->limit($request->limit)
-            ->offset($request->offset)
-            ->select('id','message','image','type','user_id','created_at')
+            ->select('id','message','user_id','created_at')
             ->get();
 
 
         Message::where('conversation_id',$conversion_id)->update(['is_seen' => 1]);
-        return $this->data(200,$conversion);
+        return view('web.messages.messages',compact('messages','conversation'));
 
     }
+    //delete conversation
+    public function deleteConversation($id){
+        Conversation::find($id)->delete();
+        return  redirect()->back()->with('success', __('web.conversationDeletedSuccessfully'));
+    }
+
+
+
+
+
+
+
+
     public function checkConversation(Request $request){
 
         $conversation = Conversation::whereIn('sender_id', [Auth::id(), $request->user_id])
@@ -112,100 +165,18 @@ class MessageController extends Controller
 
 
     }
+
+
     public function readMessage($id){
         Message::find($id)->update(['is_seen'=>1]);
         return  $this->successMessage(200,'uptaded');
     }
-    public function saveMessage(Request $request){
-        $request->validate([
-            'reciver_id' => 'required',
-            //  'message' => 'required',
-        ]);
 
-        if ($request->reciver_id == Auth::id())
-        {
-            return  $this->errorMessage(400,__('api.not_found'));
-        }
-
-
-        $conversation = Conversation::whereIn('sender_id', [Auth::id(), $request->reciver_id])
-            ->whereIn('reciver_id', [$request->reciver_id, Auth::id()])
-            ->first(); // Get conversation data
-
-        if (!$conversation) {
-            $conversation = Conversation::firstOrcreate([
-                'sender_id' => Auth::id(),
-                'reciver_id' => $request->reciver_id,
-            ]);
-
-        }
-        if($request->has('image')){
-
-            $fileName = rand().time().'.'.$request->image->getClientOriginalExtension();
-            $img = Image::make($request->image->getRealPath());
-            $img->save(public_path('uploads/'.$fileName));
-            $img->resize(150, 150, function($constraint){
-                $constraint->aspectRatio();
-            })->save(public_path('messages/'.$fileName));
-
-            $message = Message::create([
-                'image' => $fileName,
-                'user_id' => Auth::id(),
-                'conversation_id' => $conversation->id,
-                'type'=>'image'
-            ]);
-
-        }elseif(!empty($request->latitude) && !empty($request->langitude)){
-            $message = Message::create([
-                'message' => $request->latitude.','.$request->langitude,
-                'user_id' => Auth::id(),
-                'conversation_id' => $conversation->id,
-                'type'=>'location'
-            ]);
-        }else{
-
-            $message = Message::create([
-                'message' => $request->message,
-                'user_id' => Auth::id(),
-                'conversation_id' => $conversation->id,
-                'type'=>'text'
-            ]);
-        }
-
-
-
-        $tokens = User::where('id', $request->reciver_id)->value('device_token');
-        $fcm_message = 'رسالة جديدة من ';
-        $fcm_message .= auth()->user()->username;
-
-
-
-        $user = User::find($request->reciver_id);
-        $data = $message->load(array('user'=>function($query){
-            $query->select('id','username','image');
-        }));
-
-        sendNotification($user->device_token,$fcm_message,"Message",Carbon::now()->toDateTimeString(),$data);
-
-
-        $message_note = [
-
-            'data'=>$data,
-            'title'=>$fcm_message,
-            'type'=>'Message'
-        ];
-        Notification::send($user, new MessageNotification($message_note));
-
-        return $this->data(200,$data);
-    }
     public function deleteMessage($id){
         Message::find($id)->delete();
         return  $this->successMessage(200,'deleted');
     }
 
-    public function deleteConversation($id){
-        Conversation::find($id)->delete();
-        return  $this->successMessage(200,'deleted');
-    }
+
 
 }

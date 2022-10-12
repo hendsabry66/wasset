@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version May 31, 2022, 8:41 pm UTC
  *
  */
-class Favourite extends Mode
+class Favourite extends Model
 {
     use HasFactory;
     protected $fillable = ['user_id', 'favouritable_id', 'favouritable_type'];
@@ -26,6 +26,4 @@ class Favourite extends Mode
     {
         return $this->belongsTo('App\Models\User');
     }
-
-
 }

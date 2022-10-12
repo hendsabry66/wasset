@@ -115,7 +115,7 @@ class Ad extends Model implements Viewable
     }
 
     public function favourites(){
-        return $this->morphMany('App\Models\Favourite', 'favouritable');
+        return $this->morphOne('App\Models\Favourite', 'favouritable');
     }
     /**
      * image url

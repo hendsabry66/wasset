@@ -21,7 +21,7 @@
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab" tabindex="0">
-                            <form method="get" action="{{url('search')}}">
+                            <form method="get" action="{{LaravelLocalization::localizeUrl('search')}}">
                                 @csrf
                                 <input type="hidden" name="category_id" value="null">
                                 <div class="row pt-3">
@@ -36,7 +36,7 @@
                         </div>
                         @foreach($categories as $key=>$category)
                         <div class="tab-pane fade" id="pills-cat{{$key}}" role="tabpanel" aria-labelledby="pills-cat{{$key}}-tab" tabindex="0">
-                            <form method="get" action="{{url('search')}}">
+                            <form method="get" action="{{LaravelLocalization::localizeUrl('search')}}">
 
                                 @csrf
                                 <input type="hidden" name="category_id" value="{{$category->id}}">

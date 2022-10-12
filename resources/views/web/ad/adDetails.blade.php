@@ -3,7 +3,11 @@
 
 <main class="pt-4 pb-4">
     <div class="container">
-
+        @if(session()->has('success'))
+            <div class="alert alert-success text-center">
+                {{ session()->get('success') }}
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-9 pb-3">
                 <div class="e3lan-title">
@@ -43,8 +47,22 @@
 
                 </div>
                 <ul class="e3lan-s text-center">
-                    <li><a href="#"><i class="fa fa-envelope"></i> <span>مراسلة</span></a></li>
-                    <li><a href="#"><i class="fa fa-heart"></i> <span>تفضيل</span></a></li>
+                    <li>
+                        <a href="{{LaravelLocalization::localizeUrl('sendMessage/'.$ad->user->id)}}"><i class="fa fa-envelope"></i> <span>مراسلة</span></a>
+
+
+                    </li>
+
+                    <li>
+{{--                        <a href="#"><i class="fa fa-heart"></i> <span>تفضيل</span></a>--}}
+                        <form method="post" action="{{LaravelLocalization::localizeUrl('addFavorite')}}" id="favouritePost">
+                            @csrf
+                            <input type="hidden" name="ad_id" value="{{$ad->id}}" id="ad_id">
+
+                            <button type="submit" class="favorite btn btn-primary"><i class="fa fa-heart"></i>@lang('web.add_to_favourites')</button>
+
+                        </form>
+                    </li>
                     <li><a href="#"><i class="fa fa-share"></i> <span>مشاركة</span></a></li>
                     <li><a href="#"><i class="fa fa-circle-info"></i> <span>إبلاغ</span></a></li>
                 </ul>
@@ -71,4 +89,52 @@
     </div>
 </main>
 
+@endsection
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $("#favouritePost").submit(function (e) {
+                e.preventDefault();
+
+                var ad_id = $("#ad_id").val();
+
+                $.ajax({
+                    method: "post",
+                    url: "{{ url('/addFavourite') }}",
+                    dataType: "json",
+                    data: {ad_id: ad_id},
+                    cache: false,
+                    success: function (response) {
+                        // alert('تم اضافة المنتج الي المفضلة');
+                        // $('.favorite').removeClass("btn-warning").addClass("btn-success");
+                        // $('.favorite').append('<p>تمت الاضافة الي المفضلة</p>');
+
+                        var lang = "{{App::getLocale()}}";
+
+                        if(lang == 'en'){
+                            Swal.fire({
+                                title: 'success!',
+                                text: 'added to favorite',
+                                icon: 'success',
+                                confirmButtonText: 'ok'
+                            });
+                        }else{
+                            Swal.fire({
+                                title: 'تم  !',
+                                text: 'تم الاضافه الي المفضله ',
+                                icon: 'success',
+                                confirmButtonText: 'نعم'
+                            });
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
