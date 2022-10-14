@@ -47,6 +47,7 @@ return [
     'messageSentSuccessfully'=>'تم ارسال الرسالة بنجاح',
     'You_can_not_send_message_to_yourself'=>'لا يمكنك ارسال رسالة لنفسك',
     'conversationDeletedSuccessfully'=>'تم حذف المحادثة بنجاح',
+    'image'=>'الصورة',
 
 
 ];

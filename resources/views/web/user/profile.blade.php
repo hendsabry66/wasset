@@ -10,7 +10,7 @@
     <div id="head-u" class="text-center">
         <div class="overlay"></div>
         @if(!empty($user->image))
-            <img class="user-img" src="{{$user->image}}">
+            <img class="user-img" src="{{$user->image}}" width="150">
         @else
             <img class="text-center" width="150" src="{{asset('/web/assets/images/user.png')}}">
         @endif

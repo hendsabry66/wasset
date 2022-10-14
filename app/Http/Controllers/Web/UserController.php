@@ -49,6 +49,14 @@ class UserController extends AppBaseController{
         if(isset($request->password)){
             $user->password = bcrypt($request->password);
         }
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            $img = Image::make($request->file('image'));
+            $imgPath = 'uploads/users/';
+            $imgName =time().$image->getClientOriginalName();
+            $img =  $img->save($imgPath.$imgName);
+            $user->image = $imgName;
+        }
 
         $user->save();
 

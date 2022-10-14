@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','phone',
+        'name', 'email', 'password','phone','image',
     ];
 
     /**
@@ -61,6 +61,16 @@ class User extends Authenticatable
     public function favourites()
     {
         return $this->hasMany(Favourite::class);
+    }
+
+    /**
+     * get user image
+     */
+    public function getImageAttribute($value)
+    {
+        if(!empty($value)){
+            return \Request::root().'/uploads/users/'.$value;
+        }
     }
 
 

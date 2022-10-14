@@ -47,5 +47,6 @@ return [
     'messageSentSuccessfully'=>'message sent successfully',
     'You_can_not_send_message_to_yourself'=>'You can not send message to yourself',
     'conversationDeletedSuccessfully'=>'conversation deleted successfully',
+    'image'=>'image',
 
     ];

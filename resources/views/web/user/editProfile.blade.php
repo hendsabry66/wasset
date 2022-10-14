@@ -12,7 +12,7 @@
             <div class="container">
                 <div class="row justify-content-md-center">
                     <div class="col-md-7">
-                        <form method="POST" action="{{ LaravelLocalization::localizeUrl('postEditProfile') }}">
+                        <form method="POST" action="{{ LaravelLocalization::localizeUrl('postEditProfile') }}" enctype="multipart/form-data">
                             @csrf
                             <h2 class="title-form">@lang('web.editProfile')</h2>
                             <label for="1" class="form-label fw-bold">@lang('web.name')</label>
@@ -47,6 +47,10 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                             @enderror
+
+                            <label for="4" class="form-label fw-bold pt-4"> @lang('web.image')</label>
+                            <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image" >
+
 
 
                             <button type="submit" class="btn btn-submit">@lang('web.editProfile')</button>
